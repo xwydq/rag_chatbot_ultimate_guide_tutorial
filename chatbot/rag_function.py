@@ -5,6 +5,7 @@ from langchain.chains import ConversationalRetrievalChain
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from decouple import config
+from langchain.llms import Ollama
 
 embedding_function = SentenceTransformerEmbeddings(
     model_name="all-MiniLM-L6-v2"
@@ -28,7 +29,8 @@ Answer:""",
 )
 
 # create chat model
-llm = ChatOpenAI(openai_api_key=config("OPENAI_API_KEY"), temperature=0)
+# llm = ChatOpenAI(openai_api_key=config("OPENAI_API_KEY"), temperature=0)
+llm = Ollama(model="qwen")
 
 # create memory
 memory = ConversationBufferMemory(
@@ -50,5 +52,7 @@ question = "What is the book about?"
 def rag(question: str) -> str:
     # call QA chain
     response = qa_chain({"question": question})
+    print('response:', response)
+    print(response.get("answer"))
 
     return response.get("answer")
